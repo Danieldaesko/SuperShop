@@ -31,7 +31,19 @@ namespace SuperShop
                 var connectionString = Configuration.GetConnectionString("DefaultConnection");
 
                 cfg.UseSqlServer(connectionString ?? throw new InvalidOperationException("A ConnectionString 'DefaultConnection' não foi encontrada no appsettings.json."));
-            });   
+            });
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[] { "pt-PT" };
+                options.SetDefaultCulture(supportedCultures[0])
+                       .AddSupportedCultures(supportedCultures)
+                       .AddSupportedUICultures(supportedCultures);
+            });
+
+            services.AddTransient<SeedDb>();
+
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +62,7 @@ namespace SuperShop
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseRequestLocalization();
             app.UseRouting();
 
             app.UseAuthorization();
