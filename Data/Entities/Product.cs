@@ -8,13 +8,13 @@ namespace SuperShop.Data.Entities
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(50, ErrorMessage ="The field{0} can contain {1} characters length.")]
+        [MaxLength(50, ErrorMessage = "The field{0} can contain {1} characters length.")]
         public string Name { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal Price { get; set; }
 
-        [Display(Name = "Image")]   
+        [Display(Name = "Image")]
         public string ImageUrl { get; set; }
 
 
@@ -33,6 +33,7 @@ namespace SuperShop.Data.Entities
         [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = false)]
         public double Stock { get; set; }
 
+        public User User{ get; set;}
 
         }
 }

@@ -20,7 +20,6 @@ namespace SuperShop.Data
         public IQueryable<T> GetAll()
         {
             return _context.Set<T>().AsNoTracking();
-
         }
 
         public async Task<T> GetByIdAsync(int id)
