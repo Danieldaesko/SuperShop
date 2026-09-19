@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.DependencyInjection;
 using SuperShop.Data;
+using SuperShop.Data.Entities;
 
 namespace SuperShop
 {
@@ -47,6 +48,7 @@ namespace SuperShop
 
             [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
             public decimal Price { get; set; }
+            public User User { get; internal set; }
         }
     }
 }

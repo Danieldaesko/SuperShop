@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using SuperShop.Data;
+using SuperShop.Web.Data.Entities;
+using SuperShop.Web.Data.Entities;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using SuperShop.Data.Entities;
 
-
-namespace SuperShop.Data
+namespace SuperShop.Web.Data
 {
-    public class ProductRepository : GenericRepository<Product> ,IProductRepository
+    public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
-        
-
+        private readonly DataContext _context;
         public ProductRepository(DataContext context) : base(context)
         {
-            
+            _context = context;
+        }
+
+
+        public IQueryable GetAllWithUsers()
+        {
+            return _context.Products.Include(p => p.User);
         }
     }
 }

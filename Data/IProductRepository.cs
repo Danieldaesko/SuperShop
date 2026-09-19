@@ -1,13 +1,13 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using SuperShop.Data;
+using SuperShop.Web.Data.Entities;
 using System.Linq;
 using System.Threading.Tasks;
-using SuperShop.Data.Entities;
 
-namespace SuperShop.Data
+namespace SuperShop.Web.Data
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
+        Task<bool> ExistAsync(int id);
+        public IQueryable GetAllWithUsers();
     }
 }
