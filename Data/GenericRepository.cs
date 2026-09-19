@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using SuperShop.Data.Entities;
+using SuperShop.Web.Data;
+using SuperShop.Web.Data.Entities;
+using SuperShop.Web.Data;
+using SuperShop.Web.Data.Entities;
 
 
-namespace SuperShop.Data
+namespace SuperShop.Web.Data
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class,IEntity
     {

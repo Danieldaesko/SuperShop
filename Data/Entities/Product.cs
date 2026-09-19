@@ -1,4 +1,4 @@
-﻿using SuperShop.Data.Entities;
+﻿using SuperShop.Web.Data.Entities;
 using System;
 using System.ComponentModel.DataAnnotations;
 using Xunit.Sdk;

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SuperShop.Data;
+using SuperShop.Web.Data;
 
 namespace SuperShop.Migrations
 {
@@ -152,7 +152,7 @@ namespace SuperShop.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("SuperShop.Data.Entities.Product", b =>
+            modelBuilder.Entity("SuperShop.Web.Data.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -192,7 +192,7 @@ namespace SuperShop.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("SuperShop.Data.Entities.User", b =>
+            modelBuilder.Entity("SuperShop.Web.Data.Entities.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -274,7 +274,7 @@ namespace SuperShop.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SuperShop.Data.Entities.User", null)
+                    b.HasOne("SuperShop.Web.Data.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -283,7 +283,7 @@ namespace SuperShop.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SuperShop.Data.Entities.User", null)
+                    b.HasOne("SuperShop.Web.Data.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -298,7 +298,7 @@ namespace SuperShop.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SuperShop.Data.Entities.User", null)
+                    b.HasOne("SuperShop.Web.Data.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -307,16 +307,16 @@ namespace SuperShop.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SuperShop.Data.Entities.User", null)
+                    b.HasOne("SuperShop.Web.Data.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SuperShop.Data.Entities.Product", b =>
+            modelBuilder.Entity("SuperShop.Web.Data.Entities.Product", b =>
                 {
-                    b.HasOne("SuperShop.Data.Entities.User", "User")
+                    b.HasOne("SuperShop.Web.Data.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 

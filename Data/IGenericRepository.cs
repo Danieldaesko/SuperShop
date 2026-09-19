@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SuperShop.Web.Data.Entities;
 
-namespace SuperShop.Data
+
+
+namespace SuperShop.Web.Data
 {
     public interface IGenericRepository<T> where T : class
     {

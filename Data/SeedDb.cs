@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using SuperShop.Data.Entities;
-using SuperShop.Helpers;
+using SuperShop.Web.Data.Entities;
+using SuperShop.Web.Helpers;
 
 
-namespace SuperShop.Data
+namespace SuperShop.Web.Data
 {
     public class SeedDb
     {

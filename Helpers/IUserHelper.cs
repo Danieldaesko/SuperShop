@@ -1,13 +1,11 @@
 ﻿
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using SuperShop.Data;
-using SuperShop.Data.Entities;
+using SuperShop.Web.Data;
+using SuperShop.Web.Data.Entities;
+using SuperShop.Web.Data.Entities;
 
-
-
-
-namespace SuperShop.Helpers
+namespace SuperShop.Web.Helpers
 {
     public interface IUserHelper
     {

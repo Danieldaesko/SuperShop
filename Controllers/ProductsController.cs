@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SuperShop.Helpers;
-using SuperShop.Web.Data;
-using SuperShop.Web.Data.Entities;
-using SuperShop.Web.Models;
-using System;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SuperShop.Web.Data;
+using SuperShop.Web.Helpers;
+using SuperShop.Web.Models;
 
 namespace SuperShop.Web.Controllers
 {
@@ -15,11 +12,19 @@ namespace SuperShop.Web.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly IUserHelper _userHelper;
+        private readonly IImageHelper _imageHelper;
+        private readonly IConverterHelper _converterHelper;
 
-        public ProductsController(IProductRepository productRepository, IUserHelper userHelper)
+        public ProductsController(
+            IProductRepository productRepository,
+            IUserHelper userHelper,
+            IImageHelper imageHelper,
+            IConverterHelper converterHelper)
         {
             _productRepository = productRepository;
             _userHelper = userHelper;
+            _imageHelper = imageHelper;
+            _converterHelper = converterHelper;
         }
 
         // GET: Products
@@ -62,23 +67,10 @@ namespace SuperShop.Web.Controllers
 
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-                    var guid = Guid.NewGuid().ToString();
-                    var file = $"{guid}.jpg";
-
-                    path = Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        "wwwroot", "images", "products",
-                        file);
-
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await model.ImageFile.CopyToAsync(stream);
-                    }
-
-                    path = $"~/images/products/{file}";
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile, "products");
                 }
 
-                var product = this.ToProduct(model, path);
+                var product = _converterHelper.ToProduct(model, path, true);
 
                 //TODO: Modificar para o user logado
                 product.User = await _userHelper.GetUserByEmailAsync("reinaldo_7531@hotmail.com");
@@ -88,22 +80,6 @@ namespace SuperShop.Web.Controllers
             }
 
             return View(model);
-        }
-
-        private Product ToProduct(ProductViewModel model, string path)
-        {
-            return new Product
-            {
-                Id = model.Id,
-                ImageUrl = path,
-                IsAvailable = model.IsAvailable,
-                LastPurchase = model.LastPurchase,
-                LastSale = model.LastSale,
-                Name = model.Name,
-                Price = model.Price,
-                Stock = model.Stock,
-                User = model.User
-            };
         }
 
         // GET: Products/Edit/5
@@ -120,7 +96,7 @@ namespace SuperShop.Web.Controllers
                 return NotFound();
             }
 
-            var model = this.ToProductViewModel(product);
+            var model = _converterHelper.ToProductViewModel(product);
             return View(model);
         }
 
@@ -137,23 +113,10 @@ namespace SuperShop.Web.Controllers
 
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        var guid = Guid.NewGuid().ToString();
-                        var file = $"{guid}.jpg";
-
-                        path = Path.Combine(
-                            Directory.GetCurrentDirectory(),
-                            "wwwroot", "images", "products",
-                            file);
-
-                        using (var stream = new FileStream(path, FileMode.Create))
-                        {
-                            await model.ImageFile.CopyToAsync(stream);
-                        }
-
-                        path = $"~/images/products/{file}";
+                        path = await _imageHelper.UploadImageAsync(model.ImageFile, "products");
                     }
 
-                    var product = this.ToProduct(model, path);
+                    var product = _converterHelper.ToProduct(model, path, false);
 
                     //TODO: Modificar para o user logado
                     product.User = await _userHelper.GetUserByEmailAsync("reinaldo_7531@hotmail.com");
@@ -162,7 +125,7 @@ namespace SuperShop.Web.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await _productRepository.ExistAsync(model.Id))
+                    if (!await _productRepository.ExistsAsync(model.Id))
                     {
                         return NotFound();
                     }
@@ -176,22 +139,6 @@ namespace SuperShop.Web.Controllers
             }
 
             return View(model);
-        }
-
-        private ProductViewModel ToProductViewModel(Product product)
-        {
-            return new ProductViewModel
-            {
-                Id = product.Id,
-                IsAvailable = product.IsAvailable,
-                LastPurchase = product.LastPurchase,
-                LastSale = product.LastSale,
-                ImageUrl = product.ImageUrl,
-                Price = product.Price,
-                Name = product.Name,
-                Stock = product.Stock,
-                User = product.User
-            };
         }
 
         // GET: Products/Delete/5
