@@ -1,29 +1,31 @@
-﻿using System.Linq;
+﻿
+using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuperShop.Web.Data;
 using SuperShop.Web.Helpers;
 using SuperShop.Web.Models;
 
+
 namespace SuperShop.Web.Controllers
 {
+    //[Authorize]
     public class ProductsController : Controller
     {
         private readonly IProductRepository _productRepository;
         private readonly IUserHelper _userHelper;
-        private readonly IImageHelper _imageHelper;
-        private readonly IConverterHelper _converterHelper;
 
-        public ProductsController(
-            IProductRepository productRepository,
-            IUserHelper userHelper,
-            IImageHelper imageHelper,
-            IConverterHelper converterHelper)
+        public readonly IBlobHelper _blobHelper;
+        public readonly IConverterHelper _converterHelper;
+
+        public ProductsController(IProductRepository productRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
         {
             _productRepository = productRepository;
             _userHelper = userHelper;
-            _imageHelper = imageHelper;
+            _blobHelper = blobHelper;
             _converterHelper = converterHelper;
         }
 
@@ -51,38 +53,54 @@ namespace SuperShop.Web.Controllers
         }
 
         // GET: Products/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Products/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var path = string.Empty;
-
+                Guid imageId = Guid.Empty;
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-                    path = await _imageHelper.UploadImageAsync(model.ImageFile, "products");
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "products");
                 }
 
-                var product = _converterHelper.ToProduct(model, path, true);
-
+                var product = _converterHelper.ToProduct(model, imageId, true);
                 //TODO: Modificar para o user logado
                 product.User = await _userHelper.GetUserByEmailAsync("reinaldo_7531@hotmail.com");
-
                 await _productRepository.CreateAsync(product);
                 return RedirectToAction(nameof(Index));
             }
-
             return View(model);
         }
 
+        //private Product ToProduct(ProductViewModel model, string path)
+        //{
+        //    return new Product
+        //    {
+        //        Id = model.Id,
+        //        ImageUrl = path,
+        //        IsAvailable = model.IsAvailable,
+        //        LastPurchase = model.LastPurchase,
+        //        LastSale = model.LastSale,
+        //        Name = model.Name,
+        //        Price = model.Price,
+        //        Stock = model.Stock,
+        //        User = model.User
+        //    };
+        //}
+
         // GET: Products/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -95,31 +113,33 @@ namespace SuperShop.Web.Controllers
             {
                 return NotFound();
             }
-
             var model = _converterHelper.ToProductViewModel(product);
             return View(model);
         }
 
         // POST: Products/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProductViewModel model)
         {
+
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var path = model.ImageUrl;
-
+                    Guid imageId = model.ImageId;
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        path = await _imageHelper.UploadImageAsync(model.ImageFile, "products");
+                        imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "products");
                     }
 
-                    var product = _converterHelper.ToProduct(model, path, false);
+                    var product = _converterHelper.ToProduct(model, imageId, false);
 
                     //TODO: Modificar para o user logado
-                    product.User = await _userHelper.GetUserByEmailAsync("reinaldo_7531@hotmail.com");
+                    product.User = await _userHelper.GetUserByEmailAsync("danielkololo2018@gmail.com");
 
                     await _productRepository.UpdateAsync(product);
                 }
@@ -134,10 +154,8 @@ namespace SuperShop.Web.Controllers
                         throw;
                     }
                 }
-
                 return RedirectToAction(nameof(Index));
             }
-
             return View(model);
         }
 
@@ -154,9 +172,25 @@ namespace SuperShop.Web.Controllers
             {
                 return NotFound();
             }
-
+            var model = _converterHelper.ToProductViewModel(product);
             return View(product);
         }
+
+        //private ProductViewModel ToProductViewModel(Product product)
+        //{
+        //    return new ProductViewModel
+        //    {
+        //        Id = product.Id,
+        //        IsAvailable = product.IsAvailable,
+        //        LastPurchase = product.LastPurchase,
+        //        LastSale = product.LastSale,
+        //        ImageUrl = product.ImageUrl,
+        //        Price = product.Price,
+        //        Name = product.Name,
+        //        Stock = product.Stock,
+        //        User = product.User
+        //    };
+        //}
 
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]

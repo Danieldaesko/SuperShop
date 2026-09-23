@@ -1,6 +1,7 @@
 ﻿
 using SuperShop.Web.Data.Entities;
 using SuperShop.Web.Models;
+using System;
 using System.IO;
 
 namespace SuperShop.Web.Helpers
@@ -21,6 +22,11 @@ namespace SuperShop.Web.Helpers
                 Stock = model.Stock,
                 User = model.User
             };
+        }
+
+        public Product ToProduct(ProductViewModel model, Guid imageId, bool v)
+        {
+            throw new NotImplementedException();
         }
 
         public ProductViewModel ToProductViewModel(Product product)
