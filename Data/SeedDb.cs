@@ -1,20 +1,18 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using SuperShop.Web.Data.Entities;
 using SuperShop.Web.Helpers;
-
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SuperShop.Web.Data
 {
     public class SeedDb
     {
         private readonly DataContext _context;
-        private readonly Random _random;
-       
         private readonly IUserHelper _userHelper;
-        public SeedDb(DataContext context,  IUserHelper userHelper)
+        private Random _random;
+        public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
             _userHelper = userHelper;
@@ -24,48 +22,53 @@ namespace SuperShop.Web.Data
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
+            await _userHelper.CheckRoleAsync("Admin");
+            await _userHelper.CheckRoleAsync("Custumer");
 
             var user = await _userHelper.GetUserByEmailAsync("danielkololo2018@gmail.com");
-            if(user == null)
+            if (user == null)
             {
                 user = new User
                 {
                     FirstName = "Daniel",
                     LastName = "Kololo",
                     Email = "danielkololo2018@gmail.com",
-                    UserName="danielkololo2018@gmail.com",
-                    PhoneNumber = "920080877"
+                    UserName = "danielkololo2018@gmail.com",
+                    PhoneNumber = "920080877",
+
                 };
-               var result = await _userHelper.AddUserAsync(user, "Daesko2@26");
-                if (result !=IdentityResult.Success) 
+                var result = await _userHelper.AddUserAsync(user, "Daesko2@26");
+                if (result != IdentityResult.Success)
                 {
-                    throw new InvalidOperationException("Could not create the user in seeding process.");
+                    throw new InvalidOperationException("Could not create the user  in seeder");
                 }
-                
+                await _userHelper.AddUserToRoleAsync(user, "Admin");
+            }
+            var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
+            if (!isInRole)
+            {
+                await _userHelper.AddUserToRoleAsync(user, "Admin");
             }
 
             if (!_context.Products.Any())
             {
-                AddProduct("iPhone X",user);
-                AddProduct("Magic Mouse",user);
-                AddProduct("iWatch Series",user);
-                AddProduct("iPad mini",user);
-
-                // CRÍTICO: Guarda as alterações na base de dados
+                AddProduct("Iphone X", user);
+                AddProduct("Magic Mause", user);
+                AddProduct("Iwatch", user);
+                AddProduct("Ipad mini", user);
                 await _context.SaveChangesAsync();
             }
         }
 
-        // Método ajustado para aceitar apenas o nome e preencher o resto
         private void AddProduct(string name, User user)
         {
             _context.Products.Add(new Product
             {
                 Name = name,
-                Price = _random.Next(100, 1000), // Exemplo de preço aleatório
+                Price = _random.Next(1000),
                 IsAvailable = true,
-                Stock = _random.Next(100), // Atenção ao nome da propriedade (Stock vs Stack)
-                User=user,
+                Stock = _random.Next(100),
+                User = user
             });
         }
     }

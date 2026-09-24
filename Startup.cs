@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SuperShop.Web.Data;
-using SuperShop.Web.Data;
 using SuperShop.Web.Data.Entities;
 using SuperShop.Web.Helpers;
 
@@ -47,6 +46,7 @@ namespace SuperShop.Web
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IImageHelper, ImageHelper>();
             services.AddScoped<IConverterHelper, ConverterHelper>();
+            
             services.AddControllersWithViews();
         }
 
