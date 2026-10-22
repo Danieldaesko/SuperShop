@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SuperShop.Data;
 using SuperShop.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 
 
 namespace SuperShop.Controllers
@@ -58,6 +55,41 @@ namespace SuperShop.Controllers
             }
 
             return View(model);
+        }
+
+        public async Task<IActionResult> DeleteItem(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            await _orderRepository.DeleteDetailTempAsync(id.Value);
+            return RedirectToAction("Create");
+        }
+
+
+        public async Task<IActionResult> Increase(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            await _orderRepository.ModifyOrderDetailTempQuantityAsync(id.Value, 1);
+            return RedirectToAction("Create");
+        }
+
+
+        public async Task<IActionResult> Decrease(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            await _orderRepository.ModifyOrderDetailTempQuantityAsync(id.Value, -1);
+            return RedirectToAction("Create");
         }
     }
 }
