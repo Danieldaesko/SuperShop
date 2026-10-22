@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -46,6 +46,7 @@ namespace SuperShop.Data.Entities
 
         [Display(Name = "Order date")]
         [DisplayFormat(DataFormatString = "{0:mm/dd/yyyy HH:mm}", ApplyFormatInEditMode = false)]
+
         public DateTime? OrderDateLocal => this.OrderDate == null ? null : this.OrderDate.ToLocalTime();
 
     }
