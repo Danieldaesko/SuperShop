@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SuperShop.Data;
 using SuperShop.Models;
@@ -89,6 +88,18 @@ namespace SuperShop.Controllers
             }
 
             await _orderRepository.ModifyOrderDetailTempQuantityAsync(id.Value, -1);
+            return RedirectToAction("Create");
+        }
+
+
+        public async Task<IActionResult> ConfirmOrder()
+        {
+            var response = await _orderRepository.ConfirmOrderAsync(this.User.Identity.Name);
+            if (response)
+            {
+                return RedirectToAction("Index");
+            }
+
             return RedirectToAction("Create");
         }
     }
