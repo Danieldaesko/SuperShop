@@ -1,14 +1,14 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SuperShop.Web.Data;
+using SuperShop.Data;
 using Microsoft.AspNetCore.Identity;
-using SuperShop.Web.Data.Entities;
+using SuperShop.Data.Entities;
 
 
-namespace SuperShop.Web
+namespace SuperShop
 {
     public class Program
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SuperShop.Web.Data.Entities
+namespace SuperShop.Data.Entities
 {
     public interface IEntity
     {

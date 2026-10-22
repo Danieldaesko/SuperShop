@@ -1,9 +1,9 @@
-﻿using SuperShop.Web.Data;
-using SuperShop.Web.Data.Entities;
+﻿using SuperShop.Data;
+using SuperShop.Data.Entities;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SuperShop.Web.Data
+namespace SuperShop.Data
 {
     public interface IProductRepository : IGenericRepository<Product>
     {

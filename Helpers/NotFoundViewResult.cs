@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace SuperShop.Web.Helpers
+namespace SuperShop.Helpers
 {
     public class NotFoundViewResult : ViewResult
     {
@@ -10,5 +10,6 @@ namespace SuperShop.Web.Helpers
             ViewName = viewName;
             StatusCode = (int)HttpStatusCode.NotFound;
         }
+
     }
 }

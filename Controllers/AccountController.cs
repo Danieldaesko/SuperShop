@@ -1,14 +1,12 @@
-﻿
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
-using SuperShop.Web.Data.Entities;
-using SuperShop.Web.Helpers;
-using SuperShop.Web.Models;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SuperShop.Data.Entities;
+using SuperShop.Helpers;
+using SuperShop.Models;
 
-namespace SuperShop.Web.Controllers
+namespace SuperShop.Controllers
 {
     public class AccountController : Controller
     {
@@ -25,8 +23,10 @@ namespace SuperShop.Web.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
@@ -35,14 +35,17 @@ namespace SuperShop.Web.Controllers
                 var result = await _userHelper.LoginAsync(model);
                 if (result.Succeeded)
                 {
-                    if (this.Request.Query.Keys.Contains("ReturnUrl"))
+                    var returnUrl = Request.Query["ReturnUrl"].FirstOrDefault();
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     {
-                        return Redirect(this.Request.Query["ReturnUrl"].First());
+                        return Redirect(returnUrl);
                     }
-                    return this.RedirectToAction("Index", "Home");
+
+                    return RedirectToAction("Index", "Home");
                 }
             }
-            this.ModelState.AddModelError(string.Empty, "Failed  to Login");
+
+            ModelState.AddModelError(string.Empty, "Failed to login!");
             return View(model);
         }
 
@@ -62,69 +65,82 @@ namespace SuperShop.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userHelper.GetUserByEmailAsync(model.Username);
+                var user = await _userHelper.GetUserByEmailAsync(model.UserName);
                 if (user == null)
                 {
                     user = new User
                     {
-                        FirstName = model.FirtsName,
+                        FirstName = model.FirstName,
                         LastName = model.LastName,
-                        Email = model.Username,
-                        UserName = model.Username
+                        Email = model.UserName,
+                        UserName = model.UserName
                     };
+
                     var result = await _userHelper.AddUserAsync(user, model.Password);
-                    if (result != IdentityResult.Success)
+                    if (!result.Succeeded)
                     {
-                        ModelState.AddModelError(string.Empty, "The user could not be created");
+                        ModelState.AddModelError(string.Empty, "The user couldn't be created.");
                         return View(model);
                     }
+
                     var loginViewModel = new LoginViewModel
                     {
                         Password = model.Password,
                         RememberMe = false,
-                        UserName = model.Username
+                        UserName = model.UserName
                     };
+
                     var result2 = await _userHelper.LoginAsync(loginViewModel);
                     if (result2.Succeeded)
                     {
                         return RedirectToAction("Index", "Home");
                     }
-                    ModelState.AddModelError(string.Empty, "The user could not be logged");
 
+                    ModelState.AddModelError(string.Empty, "The user couldn't be logged.");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "This email is already registered.");
                 }
             }
+
             return View(model);
         }
+
+        [Authorize]
         public async Task<IActionResult> ChangeUser()
         {
-            var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+            var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
             var model = new ChangeUserViewModel();
             if (user != null)
             {
-                model.FirtsName = user.FirstName;
+                model.FirstName = user.FirstName;
                 model.LastName = user.LastName;
             }
+
             return View(model);
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> ChangeUser(ChangeUserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
                 if (user != null)
                 {
-                    user.FirstName = model.FirtsName;
+                    user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
+
                     var response = await _userHelper.UpdateUserAsync(user);
                     if (response.Succeeded)
                     {
-                        ViewBag.UserMessage = "User Updated";
+                        ViewBag.UserMessage = "User updated!";
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault().Description);
+                        ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault()?.Description);
                     }
                 }
             }
@@ -132,35 +148,41 @@ namespace SuperShop.Web.Controllers
             return View(model);
         }
 
+        [Authorize]
         public IActionResult ChangePassword()
         {
             return View();
         }
+
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
                 if (user != null)
                 {
                     var result = await _userHelper.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
-                        return this.RedirectToAction("ChangeUser");
+                        return RedirectToAction("ChangeUser");
                     }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, result.Errors.FirstOrDefault().Description);
-                    }
+
+                    ModelState.AddModelError(string.Empty, result.Errors.FirstOrDefault()?.Description);
                 }
                 else
                 {
-                    this.ModelState.AddModelError(string.Empty, "User not found.");
+                    ModelState.AddModelError(string.Empty, "User not found.");
                 }
             }
-            return this.View(model);
+
+            return View(model);
         }
 
+        public IActionResult NotAuthorized()
+        {
+            return View();
+        }
     }
 }

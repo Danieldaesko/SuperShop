@@ -1,10 +1,7 @@
-﻿
-using SuperShop.Web.Data.Entities;
-using SuperShop.Web.Models;
-using System;
-using System.IO;
+﻿using SuperShop.Data.Entities;
+using SuperShop.Models;
 
-namespace SuperShop.Web.Helpers
+namespace SuperShop.Helpers
 {
     public class ConverterHelper : IConverterHelper
     {
@@ -24,22 +21,17 @@ namespace SuperShop.Web.Helpers
             };
         }
 
-        public Product ToProduct(ProductViewModel model, Guid imageId, bool v)
-        {
-            throw new NotImplementedException();
-        }
-
         public ProductViewModel ToProductViewModel(Product product)
         {
             return new ProductViewModel
             {
                 Id = product.Id,
+                ImageUrl = product.ImageUrl,
                 IsAvailable = product.IsAvailable,
                 LastPurchase = product.LastPurchase,
                 LastSale = product.LastSale,
-                ImageUrl = product.ImageUrl,
-                Price = product.Price,
                 Name = product.Name,
+                Price = product.Price,
                 Stock = product.Stock,
                 User = product.User
             };

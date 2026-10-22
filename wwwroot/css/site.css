@@ -1,5 +1,4 @@
-﻿
-﻿ /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 a.navbar-brand {
     white-space: normal;
@@ -73,9 +72,8 @@ body {
     line-height: 60px; /* Vertically center the text there */
 }
 
-
-/*CSS bdo FORBIDDEN*/
-
+/* Forbidden page
+-------------------------------------------------- */
 
 .whistle {
     width: 20%;
@@ -120,7 +118,8 @@ body {
     text-transform: uppercase;
 }
 
-/*Error-CSS*/
+
+/*Page not Found - 404*/
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,700');
 @import url('https://fonts.googleapis.com/css?family=Catamaran:400,800');
 
@@ -253,16 +252,9 @@ body {
     }
 }
 
-/* demo stuff */
 
 
-
-html, button, input, select, textarea {
-    font-family: 'Montserrat', Helvetica, sans-serif;
-    color: #92a4ad;
-}
-
-.h1-error {
+.erro_h1 {
     text-align: center;
     margin: 30px 15px;
 }

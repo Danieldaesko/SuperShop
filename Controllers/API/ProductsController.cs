@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SuperShop.Web.Data;
+using SuperShop.Data;
 
-namespace SuperShop.Web.Controllers.API
+
+namespace SuperShop.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]

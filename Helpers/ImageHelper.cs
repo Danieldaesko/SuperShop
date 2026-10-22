@@ -3,7 +3,7 @@ using System.IO;
 using System;
 using System.Threading.Tasks;
 
-namespace SuperShop.Web.Helpers
+namespace SuperShop.Helpers
 {
     public class ImageHelper : IImageHelper
     {

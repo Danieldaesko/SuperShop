@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 
 
-namespace SuperShop.Web.Helpers
+namespace SuperShop.Helpers
 {
     public interface IImageHelper
     {

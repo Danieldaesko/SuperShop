@@ -7,16 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Logging;
-using SuperShop.Web.Data;
-using SuperShop.Web.Data.Entities;
-using SuperShop.Web.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using SuperShop.Data;
+using SuperShop.Data.Entities;
+using SuperShop.Helpers;
 
-namespace SuperShop.Web
+namespace SuperShop.Data
 {
     public class Startup
     {
@@ -51,11 +46,9 @@ namespace SuperShop.Web
             
             services.AddScoped<IConverterHelper, ConverterHelper>();
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = "/Account/NotAuthorized";
-                options.AccessDeniedPath = "/Account/NotAuthorized";
-            });
+            services.AddScoped<IImageHelper, ImageHelper>();
+            services.AddScoped<IConverterHelper, ConverterHelper>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddControllersWithViews();
         }
 

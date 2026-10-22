@@ -1,17 +1,19 @@
-﻿using Microsoft.AspNetCore.Identity;
-using SuperShop.Web.Data.Entities;
-using SuperShop.Web.Helpers;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SuperShop.Data.Entities;
+using SuperShop.Helpers;
 
-namespace SuperShop.Web.Data
+namespace SuperShop.Data
 {
     public class SeedDb
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
         private Random _random;
+
         public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
@@ -21,9 +23,11 @@ namespace SuperShop.Web.Data
 
         public async Task SeedAsync()
         {
-            await _context.Database.EnsureCreatedAsync();
+          
+            await _context.Database.MigrateAsync();
+
             await _userHelper.CheckRoleAsync("Admin");
-            await _userHelper.CheckRoleAsync("Custumer");
+            await _userHelper.CheckRoleAsync("Customer");
 
             var user = await _userHelper.GetUserByEmailAsync("danielkololo2018@gmail.com");
             if (user == null)
@@ -34,16 +38,18 @@ namespace SuperShop.Web.Data
                     LastName = "Kololo",
                     Email = "danielkololo2018@gmail.com",
                     UserName = "danielkololo2018@gmail.com",
-                    PhoneNumber = "920080877",
-
+                    PhoneNumber = "212343555"
                 };
-                var result = await _userHelper.AddUserAsync(user, "Daesko2@26");
+
+                var result = await _userHelper.AddUserAsync(user, "123456");
                 if (result != IdentityResult.Success)
                 {
-                    throw new InvalidOperationException("Could not create the user  in seeder");
+                    throw new InvalidOperationException("Could not create the user in seeder");
                 }
+
                 await _userHelper.AddUserToRoleAsync(user, "Admin");
             }
+
             var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
             if (!isInRole)
             {
@@ -52,10 +58,10 @@ namespace SuperShop.Web.Data
 
             if (!_context.Products.Any())
             {
-                AddProduct("Iphone X", user);
-                AddProduct("Magic Mause", user);
-                AddProduct("Iwatch", user);
-                AddProduct("Ipad mini", user);
+                AddProduct("iPhone X", user);
+                AddProduct("Magic Mouse", user);
+                AddProduct("iWatch Series 4", user);
+                AddProduct("iPad Mini", user);
                 await _context.SaveChangesAsync();
             }
         }

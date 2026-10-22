@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SuperShop.Web.Data;
-using SuperShop.Web.Helpers;
-using SuperShop.Web.Models;
+using SuperShop.Data;
+using SuperShop.Helpers;
+using SuperShop.Models;
 
-
-namespace SuperShop.Web.Controllers
+namespace SuperShop.Controllers
 {
     //[Authorize]
     public class ProductsController : Controller

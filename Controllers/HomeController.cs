@@ -14,7 +14,7 @@ using SuperShop.Web.Models;
 using SuperShop.Models;
 
 
-namespace SuperShop.Web.Controllers
+namespace SuperShop.Controllers
 {
     public class HomeController : Controller
     {
@@ -40,6 +40,7 @@ namespace SuperShop.Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
         [Route("error/404")]
         public IActionResult Error404()
         {
